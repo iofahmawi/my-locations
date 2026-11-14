@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مواقعي</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-1440.png">
+<link rel="apple-touch-icon" href="icon-1440.png">
+<meta name="theme-color" content="#f4f6f8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10161c" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="مواقعي">
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--text:#1c2733;--muted:#6b7a89;--accent:#2563eb;--border:#e2e8ee;--danger:#c0392b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--card:#19222b;--text:#e8eef3;--muted:#93a3b2;--accent:#2563eb;--border:#2a3642;--danger:#ef6b5b}}
+:root[data-theme="dark"]{--bg:#10161c;--card:#19222b;--text:#e8eef3;--muted:#93a3b2;--accent:#2563eb;--border:#2a3642;--danger:#ef6b5b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scrollbar-width:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:16px}
+@media (display-mode:standalone){.wrap{padding-top:17px}}
+h1{font-size:20px;margin:8px 0 16px;-webkit-user-select:none;user-select:none}
+.form{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;flex-direction:row;align-items:center;gap:10px}
+.form input{flex:1;min-width:0}
+.form button.add{flex:none;width:72px;padding-top:2px;font-size:15.5px;height:42px}
+.form input{height:42px}
+input{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:0 11px;height:46px;width:100%}
+input.hasar{padding-top:6px}
+#val:placeholder-shown{padding-bottom:4px}
+input:focus{outline:none;border-color:var(--accent)}
+input.ltr{direction:ltr;text-align:left}
+input.ltr::placeholder{direction:rtl;text-align:right}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.7}
+button.add{font:inherit;font-weight:600;background:var(--accent);color:#fff;border:0;border-radius:10px;padding:0;height:46px;cursor:pointer}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:1px 0 16px}
+.top h1{margin:0;display:flex;align-items:center;gap:8px}
+.top h1 svg{color:var(--accent);flex:none;position:relative;top:0}
+.tools{display:flex;gap:8px}
+.tools button{height:38px;padding:0 12px;font:inherit;font-size:14px;font-weight:600;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer}
+.sbox{display:flex;align-items:center;height:38px;width:38px;overflow:hidden;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:width .25s ease,border-color .2s}
+.tools #moreBtn{flex:none;width:38px;padding:0;display:flex;align-items:center;justify-content:center}
+.tools .sbox button{flex:none;width:36px;height:36px;padding:0;border:0;border-radius:0;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text)}
+.sbox input{flex:1;min-width:0;height:36px;border:0;border-radius:0;background:transparent;padding:0 4px 4px 10px;font-size:15px;visibility:hidden}
+.sbox input:focus{border:0}
+.top.s .sbox{width:100%}
+.top.s .sbox input{visibility:visible}
+.top.s h1{flex:none;white-space:nowrap;margin-inline-end:5px}
+.top.s .tools{flex:1;min-width:0}
+#cats{display:flex;gap:8px;overflow-x:auto;margin-top:16px;padding-bottom:14px;margin-bottom:-14px;scrollbar-width:none}
+#cats::-webkit-scrollbar{display:none}
+#cats[hidden]{display:none}
+#cats .chip{padding-top:1px}
+.chips:empty{display:none}
+#modal .btns,#cmodal .btns,#fmodal .btns,#curmodal .btns,#dsmodal .btns{margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{flex:none;height:34px;padding:0 14px;font:inherit;font-size:14px;font-weight:600;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:999px;cursor:pointer}
+.chips .chip{height:32px;background:var(--bg)}
+.chip.on{--bd-on:color-mix(in srgb,var(--border) 96%,var(--text) 4%);border-color:var(--bd-on);box-shadow:inset 0 0 0 .5px var(--bd-on)}
+.chip{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.chip.drag{position:relative;z-index:5;box-shadow:0 4px 12px rgba(0,0,0,.28);transition:none}
+.list{margin-top:16px;display:flex;flex-direction:column;gap:10.75px}
+.item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12.43px 14px;display:flex;align-items:center;gap:12px}
+.item{flex-wrap:wrap;row-gap:0;cursor:pointer}
+.opts{display:none;flex-basis:100%;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.item.open .opts{display:grid;grid-template-columns:1fr auto 1fr}
+.opts>button:nth-child(1){grid-column:1;justify-self:start}
+.opts>button:nth-child(2){grid-column:2;justify-self:center}
+.opts>.dg{grid-column:3;justify-self:end;display:flex;align-items:center;gap:10px}
+.item.open .opts.eq{display:flex;justify-content:space-between}
+.opts.eq .dg{display:contents}
+.opts.eq button{padding:0}
+.opts>.dg button.dist{padding:0}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld small{font-size:12.5px;color:var(--muted);font-weight:600}
+.fgrp{font-size:14px;font-weight:700;margin-top:2px}
+.tw{position:relative}
+.tw span{position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);color:var(--muted);opacity:.7;pointer-events:none}
+.tw:not(.empty) span{display:none}
+.tw.empty input,.tw.empty input::-webkit-datetime-edit{color:transparent}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts button{display:flex;align-items:center;gap:6px;height:36px;padding:0 10px;font:inherit;font-size:14px;font-weight:600;color:var(--text);background:transparent;border:0;border-radius:8px;cursor:pointer}
+.opts button:first-child{padding-inline-start:0}
+.opts button:active{opacity:.55}
+.opts button svg{color:var(--accent);flex:none}
+.opts .dist{display:flex;align-items:center;gap:6px;color:var(--text);font-size:14px;font-weight:600;white-space:nowrap;-webkit-user-select:none;user-select:none}
+.opts .dist svg{flex:none;color:var(--accent)}
+.info{flex:1;min-width:0;min-height:21px}
+.name{font-weight:700;font-size:16.5px;overflow-wrap:anywhere}
+.val{direction:ltr;text-align:left;color:var(--muted);font-size:13px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sw.drag{z-index:5;box-shadow:0 10px 26px rgba(0,0,0,.28);transition:none}
+.sw{-webkit-touch-callout:none}
+.sw{position:relative;border-radius:14px;overflow:hidden}
+.sw .bg{position:absolute;inset:0;display:flex;align-items:center;padding:0 22px;color:#fff;font-weight:700}
+.sw .item{position:relative;touch-action:pan-y;-webkit-user-select:none;user-select:none}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.modal[hidden]{display:none}
+.box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;width:100%;max-width:400px;display:flex;flex-direction:column;gap:10px;max-height:100%;overflow:auto}
+.box h2{margin:0 0 4px;font-size:18px;text-align:center}
+.box p{text-align:center;margin:0 0 6px;color:var(--muted);overflow-wrap:anywhere}
+.box p b{color:var(--text)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btns button{min-width:0;padding:0}
+button.add.danger{background:var(--danger)}
+button.cancel{font:inherit;font-weight:600;height:46px;color:var(--text);background:transparent;border:1.25px solid var(--border);border-radius:10px;cursor:pointer}
+.empty{text-align:center;color:var(--muted);padding:30px 0}
+.dmenu{position:fixed;z-index:15;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:6px;min-width:0;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.dmenu[hidden]{display:none}
+.dmenu button{display:flex;align-items:center;gap:10px;width:100%;height:46px;padding:0;padding-inline-start:12px;padding-inline-end:20px;background:transparent;border:0;border-radius:8px;color:var(--text);font:inherit;font-size:15px;font-weight:600;cursor:pointer;text-align:right}
+.dmenu button:active{background:var(--bg)}
+.dmenu button svg{color:var(--accent);flex:none}
+.dmenu button[hidden]{display:none}
+.dmenu button.dng svg{color:var(--danger)}
+.fw{position:relative}
+.fw input{padding-right:46px}
+.fw .cvb{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;color:var(--accent);background:transparent;border:0;border-radius:8px;cursor:pointer}
+.fw .cvb[hidden]{display:none}
+.fw .cvb:active{background:var(--border)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 24px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+#toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>مواقعي</span></h1>
+    <div class="tools">
+      <div class="sbox"><button id="searchBtn" aria-label="بحث"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button><input id="q" type="text" placeholder="بحث بالاسم" autocomplete="off" enterkeyhint="search" tabindex="-1"></div>
+      <button id="moreBtn" aria-label="المزيد"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></svg></button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+  </div>
+  <div class="form">
+    <input id="val" class="ltr" placeholder="رابط الموقع أو رمز بلس" autocomplete="off" autocapitalize="off">
+    <button class="add" id="addBtn">إضافة</button>
+  </div>
+  <div id="cats" hidden></div>
+  <div class="list" id="list"></div>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="box">
+    <h2 id="eTitle">تعديل الموقع</h2>
+    <input id="eName" maxlength="60">
+    <div class="fw"><input id="eVal" class="ltr" autocomplete="off" autocapitalize="off"><button type="button" class="cvb" id="eConv" hidden></button></div>
+    <input id="eKm" class="ltr" type="number" inputmode="decimal" min="0" step="any" placeholder="المسافة بالكيلومتر" autocomplete="off">
+    <input id="eCat" placeholder="التصنيف (اختياري)" maxlength="30" autocomplete="off">
+    <div class="chips" id="eCats"></div>
+    <div class="btns"><button class="cancel" id="eCancel">إلغاء</button><button class="add" id="eSave">حفظ</button></div>
+  </div>
+</div>
+<div class="modal" id="cmodal" hidden>
+  <div class="box">
+    <h2>تعديل اسم الفئة</h2>
+    <input id="cName" maxlength="30" autocomplete="off">
+    <div class="btns"><button class="cancel" id="cCancel">إلغاء</button><button class="add" id="cSave">حفظ</button></div>
+  </div>
+</div>
+<div class="modal" id="dmodal" hidden>
+  <div class="box">
+    <h2>حذف الموقع</h2>
+    <p>هل تريد حذف <b id="dName"></b>؟</p>
+    <div class="btns"><button class="cancel" id="dCancel">إلغاء</button><button class="add danger" id="dConfirm">حذف</button></div>
+  </div>
+</div>
+<div class="modal" id="imodal" hidden>
+  <div class="box">
+    <h2>استيراد المواقع</h2>
+    <p>سيتم استبدال كل المواقع الحالية بمواقع الملف وعددها <b id="iCount"></b>. هل تريد المتابعة؟</p>
+    <div class="btns"><button class="cancel" id="iCancel">إلغاء</button><button class="add danger" id="iConfirm">استبدال</button></div>
+  </div>
+</div>
+<div class="modal" id="amodal" hidden>
+  <div class="box">
+    <h2>حذف</h2>
+    <p>سيتم حذف كل المواقع نهائياً وعددها <b id="aCount"></b>. يُنصح بتصدير نسخة احتياطية أولاً. هل تريد المتابعة؟</p>
+    <div class="btns"><button class="cancel" id="aCancel">إلغاء</button><button class="add danger" id="aConfirm">حذف</button></div>
+  </div>
+</div>
+<div class="modal" id="fmodal" hidden>
+  <div class="box">
+    <h2>رسوم التوصيل</h2>
+    <div class="fgrp">فتحة العداد</div>
+    <div class="row2">
+      <input id="fFd" class="ltr" type="number" inputmode="decimal" min="0" step="any" placeholder="نهاراً" autocomplete="off">
+      <input id="fFn" class="ltr" type="number" inputmode="decimal" min="0" step="any" placeholder="ليلاً" autocomplete="off">
+    </div>
+    <div class="fgrp">التعرفة الكيلومترية</div>
+    <div class="row2">
+      <input id="fRd" class="ltr" type="number" inputmode="decimal" min="0" step="any" placeholder="نهاراً" autocomplete="off">
+      <input id="fRn" class="ltr" type="number" inputmode="decimal" min="0" step="any" placeholder="ليلاً" autocomplete="off">
+    </div>
+    <div class="fgrp">رسوم إضافية</div>
+    <input id="fEx" class="ltr" type="number" inputmode="decimal" min="0" step="any" placeholder="المبلغ" autocomplete="off">
+    <div class="fgrp">الحد الأدنى للدفع</div>
+    <input id="fMn" class="ltr" type="number" inputmode="decimal" min="0" step="any" placeholder="المبلغ" autocomplete="off">
+    <div class="fgrp">الفترة الليلية</div>
+    <div class="row2">
+      <div class="tw empty"><span>من</span><input id="fNs" class="ltr" type="time"></div>
+      <div class="tw empty"><span>إلى</span><input id="fNe" class="ltr" type="time"></div>
+    </div>
+    <div class="btns"><button class="cancel" id="fCancel">إلغاء</button><button class="add" id="fSave">حفظ</button></div>
+  </div>
+</div>
+<div class="modal" id="curmodal" hidden>
+  <div class="box">
+    <h2>رمز العملة</h2>
+    <input id="curIn" placeholder="مثال : JD" maxlength="6" autocomplete="off">
+    <div class="btns"><button class="cancel" id="curCancel">إلغاء</button><button class="add" id="curSave">حفظ</button></div>
+  </div>
+</div>
+<div class="modal" id="dsmodal" hidden>
+  <div class="box">
+    <h2>المسافة من المنزل</h2>
+    <p>تُحسب مسافة الطريق من موقع البطاقة المسماة «المنزل» إلى كل موقع.</p>
+    <div class="btns"><button class="add" id="dsCalc">حساب الناقصة</button><button class="cancel" id="dsAll">إعادة حساب الكل</button></div>
+  </div>
+</div>
+<div id="hmenu" class="dmenu" hidden>
+  <button id="hFare"></button>
+  <button id="hDist"></button>
+  <button id="hSort"></button>
+  <button id="hImport"></button>
+  <button id="hExport"></button>
+  <button id="hDel" class="dng"></button>
+</div>
+<div id="toast"></div>
+
+<script>
+const KEY='my-locations-items';
+let items=[];
+let curCat='';
+const SKEY=KEY+'-sort-near';
+let sortNear=false;
+try{sortNear=localStorage.getItem(SKEY)==='1'}catch(e){}
+try{localStorage.removeItem('loc_accent')}catch(e){}
+try{items=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){items=[]}
+const toLatin=s=>String(s).replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-0x660).replace(/[\u06F0-\u06F9]/g,c=>c.charCodeAt(0)-0x6F0).replace(/\u066B/g,'.').replace(/[\u060C\u066C]/g,',');
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}};
+if(Array.isArray(items)){let ch=false;items.forEach(it=>{if(it&&typeof it.value==='string'){const n=toLatin(it.value);if(n!==it.value){it.value=n;ch=true}}});if(ch)save()}
+const $=id=>document.getElementById(id);
+const listEl=$('list');
+
+function countWord(n){return n<=2?n+' موقع':n<=10?n+' مواقع':n+' موقعاً'}
+const parseKm=v=>{v=toLatin(v).trim().replace(',','.');if(v==='')return null;const x=Number(v);return isFinite(x)&&x>=0?x:null};
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),1500)}
+function mapsUrl(v){
+  v=v.trim();
+  if(/^https?:\/\//i.test(v))return v;
+  if(/^(www\.|maps\.|goo\.gl|maps\.app\.goo\.gl)/i.test(v))return 'https://'+v;
+  return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(v);
+}
+function dirUrl(v){
+  v=v.trim();let dest=null;
+  if(/^(https?:\/\/|www\.|maps\.|goo\.gl|maps\.app\.goo\.gl)/i.test(v)){
+    let u=v;try{u=decodeURIComponent(v)}catch(e){}
+    const m=u.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/)||u.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/)||u.match(/[?&](?:q|query|ll|destination)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+    if(m)dest=m[1]+','+m[2];
+  }else dest=v;
+  return dest?'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination='+encodeURIComponent(dest):null;
+}
+function openDir(v){
+  const u=dirUrl(v);
+  if(u)window.open(u,'_blank','noopener');
+  else{window.open(mapsUrl(v),'_blank','noopener');toast('الرابط مختصر، اضغط اتجاهات من الخريطة')}
+}
+async function copyText(t){
+  try{await navigator.clipboard.writeText(t)}
+  catch(e){
+    const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';
+    document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove();
+  }
+  toast('تم النسخ');
+}
+
+const ICO_COPY='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg>';
+const ICO_RULER='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/><path d="M9 6.5h7a2.75 2.75 0 0 1 0 5.5H8a2.75 2.75 0 0 0 0 5.5h7"/></svg>';
+const ICO_TARGET='<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>';
+const ICO_PLUSBOX='<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></svg>';
+const ICO_SWAP='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h15"/><path d="M15 4l4 4-4 4"/><path d="M20 16H5"/><path d="M9 12l-4 4 4 4"/></svg>';
+const ICO_MAP='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+
+let openEl=null;
+function closeOpts(){if(openEl){openEl.classList.remove('open');openEl=null}}
+const CRE=/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/,PRE=/^[23456789CFGHJMPQRVWX]{8}\+[23456789CFGHJMPQRVWX]{2,7}(?:\s|$)/i;
+const fmtLL=d=>d.lat.toFixed(6)+', '+d.lng.toFixed(6);
+/* نوع القيمة: إحداثيات أو كود بلس كامل، ثم التحويل بينهما */
+const SRE=/^[23456789CFGHJMPQRVWX]{2,6}\+[23456789CFGHJMPQRVWX]{2,7}\s+\S/i;
+function valKind(v){
+  v=toLatin(String(v)).trim();
+  const m=v.match(CRE);
+  if(m&&Math.abs(+m[1])<=90&&Math.abs(+m[2])<=180)return 'coord';
+  if(PRE.test(v)&&pcDecode(v.split(/\s/)[0]))return 'plus';
+  if(SRE.test(v))return 'short';
+  return null;
+}
+function convertVal(v){
+  v=toLatin(String(v)).trim();const k=valKind(v);
+  if(k==='coord'){const m=v.match(CRE);return pcEncode(+m[1],+m[2])}
+  if(k==='plus')return fmtLL(pcDecode(v.split(/\s/)[0]));
+  return null;
+}
+const hmenu=$('hmenu');
+function closeMenu(){hmenu.hidden=true}
+const IC='width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+$('hImport').innerHTML='<svg '+IC+'><path d="M12 4v11"/><path d="M7 10.5l5 5 5-5"/><path d="M5 19h14"/></svg><span>استيراد</span>';
+$('hExport').innerHTML='<svg '+IC+'><path d="M12 16V5"/><path d="M7 9.5l5-5 5 5"/><path d="M5 19h14"/></svg><span>تصدير</span>';
+$('moreBtn').onclick=()=>{
+  if(!hmenu.hidden){closeMenu();return}
+  closeMenu();$('hDel').hidden=!items.length;setSortLabel();hmenu.hidden=false;
+  const r=$('moreBtn').getBoundingClientRect(),mw=hmenu.offsetWidth;
+  hmenu.style.left=Math.max(8,Math.min(r.left,window.innerWidth-mw-8))+'px';
+  hmenu.style.top=(r.bottom+6)+'px';
+};
+function setSortLabel(){
+  $('hSort').innerHTML='<svg '+IC+'><path d="M7 5v14"/><path d="M3.5 15.5L7 19l3.5-3.5"/><path d="M17 19V5"/><path d="M13.5 8.5L17 5l3.5 3.5"/></svg><span>'+'ترتيب'+'</span>';
+}
+setSortLabel();
+$('hSort').onclick=()=>{
+  closeMenu();sortNear=!sortNear;
+  try{localStorage.setItem(SKEY,sortNear?'1':'0')}catch(e){}
+  setSortLabel();render();
+  toast(sortNear?'مرتبة حسب الأقرب من المنزل':'الترتيب الأصلي');
+};
+$('hDel').innerHTML='<svg '+IC+'><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg><span>حذف</span>';
+$('hDel').onclick=()=>{closeMenu();$('aCount').textContent=countWord(items.length);$('amodal').hidden=false;fitModals()};
+$('hExport').onclick=()=>{closeMenu();exportItems()};
+$('hImport').onclick=()=>{closeMenu();fileEl.click()};
+document.addEventListener('pointerdown',e=>{
+  if(hmenu.hidden)return;
+  if(e.target.closest('.dmenu')||e.target.closest('#moreBtn'))return;
+  closeMenu();
+},true);
+window.addEventListener('scroll',closeMenu,{passive:true});
+window.addEventListener('resize',closeMenu);
+const CKEY=KEY+'-cat-order';
+let catOrder=[];
+try{const v=JSON.parse(localStorage.getItem(CKEY)||'[]');if(Array.isArray(v))catOrder=v.filter(x=>typeof x==='string')}catch(e){}
+const saveCatOrder=()=>{try{localStorage.setItem(CKEY,JSON.stringify(catOrder))}catch(e){}};
+const getCats=()=>{const all=[...new Set(items.map(i=>i.cat).filter(Boolean))];return [...catOrder.filter(c=>all.includes(c)),...all.filter(c=>!catOrder.includes(c))]};
+function renderCats(){
+  const el=$('cats'),cats=getCats();
+  if(!cats.length){el.hidden=true;el.innerHTML='';curCat='';return}
+  if(curCat&&!cats.includes(curCat))curCat='';
+  el.hidden=false;el.innerHTML='';
+  [''].concat(cats).forEach(c=>{
+    const b=document.createElement('button');
+    b.className='chip'+(c===curCat?' on':'');
+    b.textContent=c||'الكل';
+    b.onclick=()=>{if(chipSwiped)return;if(c&&c===curCat)openCatEdit(c);else{curCat=c;render()}};
+    b._cat=c;if(c)attachChipDrag(b,el);
+    el.appendChild(b);
+  });
+}
+const norm=t=>String(t).toLowerCase().replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').trim();
+$('q').addEventListener('input',()=>render());
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('q').blur()}});
+$('searchBtn').onclick=()=>{
+  const top=document.querySelector('.top'),open=!top.classList.contains('s');
+  top.classList.toggle('s',open);
+  $('q').tabIndex=open?0:-1;
+  if(open)$('q').focus();else{$('q').value='';$('q').blur();render()}
+};
+document.addEventListener('click',e=>{
+  const top=document.querySelector('.top');
+  if(!top.classList.contains('s'))return;
+  if(e.target.closest('.sbox,#moreBtn,#hmenu,.sw,.modal,#cats'))return;
+  top.classList.remove('s');
+  $('q').tabIndex=-1;$('q').value='';$('q').blur();render();
+});
+function render(){
+  closeMenu();openEl=null;
+  listEl.innerHTML='';
+  renderCats();
+  const nq=norm($('q').value);
+  let view=items.filter(it=>(!curCat||it.cat===curCat)&&(!nq||norm(it.name).includes(nq)));
+  if(sortNear){
+    const dk=it=>isHome(it)?-1:(it.km!=null?it.km:Infinity);
+    view=view.map((it,i)=>[it,i]).sort((a,b)=>{const x=dk(a[0]),y=dk(b[0]);return x===y?a[1]-b[1]:x<y?-1:1}).map(p=>p[0]);
+  }
+  if(!items.length){listEl.innerHTML='<div class="empty">لا توجد مواقع محفوظة بعد</div>';return}
+  if(!view.length){listEl.innerHTML='<div class="empty">لا توجد نتائج</div>';return}
+  view.forEach(it=>{
+    const sw=document.createElement('div');sw.className='sw';sw._it=it;
+    const bg=document.createElement('div');bg.className='bg';
+    const el=document.createElement('div');el.className='item';
+    const info=document.createElement('div');info.className='info';
+    const n=document.createElement('div');n.className='name';n.textContent=it.name;
+    info.append(n);
+    const sm=x=>x.replace('width="20" height="20"','width="18" height="18"');
+    const opts=document.createElement('div');opts.className='opts';
+    const bc=document.createElement('button');bc.innerHTML=sm(ICO_COPY)+'<span>نسخ</span>';bc.onclick=e=>{e.stopPropagation();copyText(it.value)};
+    const bo=document.createElement('button');bo.innerHTML=sm(ICO_MAP)+'<span>الموقع</span>';bo.onclick=()=>{window.open(mapsUrl(it.value),'_blank','noopener')};
+    opts.append(bc,bo);
+    if(it.km!=null){
+      const g=document.createElement('div');g.className='dg';
+      const d=document.createElement('button');d.className='dist';d.setAttribute('aria-label','اتجاهات');d.onclick=()=>openDir(it.value);d.innerHTML=sm(ICO_RULER)+'<span></span>';d.lastChild.dir='ltr';d.lastChild.textContent=it.km+' km';g.append(d);
+      const fe=fareFor(it.km);
+      if(fe!==null){opts.classList.add('eq');const f=document.createElement('button');f.className='dist';f.setAttribute('aria-label','رمز العملة');f.onclick=openCur;f.innerHTML=sm(ICO_MONEY)+'<span></span>';f.lastChild.dir='ltr';f.lastChild.textContent=fmtMoney(fe)+' '+(fare.cur||'JD');g.append(f)}
+      opts.append(g);
+    }
+    el.append(info,opts);
+    el.addEventListener('click',e=>{if(e.target.closest('.opts'))return;const was=el.classList.contains('open');closeOpts();if(!was){el.classList.add('open');openEl=el}});sw.append(bg,el);listEl.appendChild(sw);
+    attachSwipe(el,bg,it);
+  });
+}
+
+$('val').addEventListener('input',()=>markAr($('val')));
+$('addBtn').onclick=()=>{
+  const v=toLatin($('val').value.trim());
+  if(!v){toast('أدخل الرابط أو الرمز');return}
+  openAdd(v);
+};
+$('val').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('addBtn').click()}});
+
+/* تصدير / استيراد */
+function exportItems(){
+  const b=new Blob([JSON.stringify({items,catOrder:getCats(),fare},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);const t=new Date(),p=n=>String(n).padStart(2,'0');a.download='locations '+p(t.getDate())+'-'+p(t.getMonth()+1)+'-'+t.getFullYear()+'.json';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+const fileEl=$('importFile');
+let pendingImport=null,pendingCats=[],pendingFare=null;
+function sanitizeFare(f){
+  if(!f||typeof f!=='object'||Array.isArray(f))return null;
+  const o={};
+  ['fd','fn','rd','rn','ex','mn'].forEach(k=>{const v=f[k];if(typeof v==='number'&&isFinite(v)&&v>=0)o[k]=v});
+  const ok=t=>typeof t==='string'&&/^\d{1,2}:\d{2}$/.test(t);
+  if(ok(f.ns)&&ok(f.ne)){o.ns=f.ns;o.ne=f.ne}
+  if(typeof f.cur==='string'&&f.cur.trim()&&f.cur.length<=6)o.cur=f.cur.trim();
+  return o;
+}
+fileEl.onchange=()=>{
+  const f=fileEl.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const raw=JSON.parse(rd.result);const arr=Array.isArray(raw)?raw:raw&&raw.items;if(!Array.isArray(arr))throw 0;
+      pendingFare=sanitizeFare(raw.fare);
+      pendingCats=Array.isArray(raw.catOrder)?raw.catOrder.filter(x=>typeof x==='string').map(x=>x.trim().slice(0,30)).filter(Boolean):[];
+      const fresh=[];
+      arr.forEach(x=>{
+        const name=String(x&&x.name||'').trim().slice(0,60),value=toLatin(String(x&&x.value||'').trim());
+        if(!name||!value||fresh.some(i=>i.name===name&&i.value===value))return;
+        const cat=String(x&&x.cat||'').trim().slice(0,30);
+        const o={name,value};if(cat)o.cat=cat;if(typeof x.km==='number'&&isFinite(x.km)&&x.km>=0)o.km=x.km;fresh.push(o);
+      });
+      if(!fresh.length)throw 0;
+      pendingImport=fresh;$('iCount').textContent=countWord(fresh.length);
+      $('imodal').hidden=false;fitModals();
+    }catch(e){alert('الملف غير صالح')}
+    fileEl.value='';
+  };
+  rd.readAsText(f);
+};
+
+const imodal=$('imodal');
+function closeImp(){imodal.hidden=true;pendingImport=null;pendingFare=null;fitModals()}
+$('iConfirm').onclick=()=>{
+  if(pendingImport){items=pendingImport;catOrder=pendingCats;if(pendingFare){fare=pendingFare;try{localStorage.setItem(FKEY,JSON.stringify(fare))}catch(e){}}saveCatOrder();curCat='';$('q').value='';save();render();toast('تم الاستبدال')}
+  closeImp();
+};
+$('iCancel').onclick=closeImp;
+imodal.addEventListener('click',e=>{if(e.target===imodal)closeImp()});
+const amodal=$('amodal');
+function closeAll(){amodal.hidden=true;fitModals()}
+$('aConfirm').onclick=()=>{items=[];curCat='';$('q').value='';save();render();toast('تم حذف الكل');closeAll()};
+$('aCancel').onclick=closeAll;
+amodal.addEventListener('click',e=>{if(e.target===amodal)closeAll()});
+
+/* حذف */
+let swiped=false,deleting=null;
+const dmodal=$('dmodal');
+function askDelete(it){deleting=it;$('dName').textContent=it.name;dmodal.hidden=false}
+function closeDel(){dmodal.hidden=true;deleting=null}
+$('dConfirm').onclick=()=>{if(deleting){items.splice(items.indexOf(deleting),1);save()}closeDel();render()};
+$('dCancel').onclick=closeDel;
+dmodal.addEventListener('click',e=>{if(e.target===dmodal)closeDel()});
+
+/* السحب: يسار = تعديل ، يمين = حذف */
+let dragActive=false;
+window.addEventListener('touchmove',e=>{if(dragActive)e.preventDefault()},{passive:false});
+function attachSwipe(el,bg,it){
+  const sw=el.parentElement;
+  let sx=0,sy=0,dx=0,active=false,horiz=null,id=null,timer=null,drag=false,baseTop=0,baseScroll=0,ty=0,lastY=0;
+  const place=()=>{
+    ty=lastY-sy+(window.scrollY-baseScroll)-(sw.offsetTop-baseTop);
+    sw.style.transform='translateY('+ty+'px) scale(1.02)';
+  };
+  const reorder=()=>{
+    for(let k=0;k<8;k++){
+      const c=sw.offsetTop+ty+sw.offsetHeight/2;
+      const p=sw.previousElementSibling,n=sw.nextElementSibling;
+      if(p&&p._it&&c<p.offsetTop+p.offsetHeight/2)listEl.insertBefore(p,n);
+      else if(n&&n._it&&c>n.offsetTop+n.offsetHeight/2)listEl.insertBefore(n,sw);
+      else break;
+      place();
+    }
+  };
+  el.addEventListener('contextmenu',e=>e.preventDefault());
+  el.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    sx=e.clientX;sy=e.clientY;dx=0;active=true;horiz=null;id=e.pointerId;
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      if(!active||horiz!==null||$('q').value.trim()||curCat||sortNear)return;
+      closeMenu();closeOpts();drag=true;dragActive=true;
+      try{el.setPointerCapture(id)}catch(_){}
+      baseTop=sw.offsetTop;baseScroll=window.scrollY;lastY=sy;
+      sw.classList.add('drag');
+      if(navigator.vibrate)navigator.vibrate(15);
+      place();
+    },380);
+  });
+  el.addEventListener('pointermove',e=>{
+    if(!active||e.pointerId!==id)return;
+    if(drag){
+      lastY=e.clientY;
+      if(lastY<70)window.scrollBy(0,-12);else if(lastY>window.innerHeight-70)window.scrollBy(0,12);
+      place();reorder();return;
+    }
+    const mx=e.clientX-sx,my=e.clientY-sy;
+    if(horiz===null){
+      if(Math.abs(mx)<8&&Math.abs(my)<8)return;
+      clearTimeout(timer);
+      horiz=Math.abs(mx)>Math.abs(my);
+      if(!horiz){active=false;return}
+      closeMenu();
+      try{el.setPointerCapture(id)}catch(_){}
+    }
+    dx=Math.max(-140,Math.min(140,mx));
+    el.style.transition='none';el.style.transform='translateX('+dx+'px)';
+    bg.style.background=dx<0?'var(--accent)':'var(--danger)';
+    bg.style.justifyContent=dx<0?'flex-start':'flex-end';
+    bg.textContent=dx<0?'تعديل':'حذف';
+  });
+  const end=()=>{
+    clearTimeout(timer);
+    if(!active)return;
+    active=false;
+    if(drag){
+      drag=false;dragActive=false;
+      sw.classList.remove('drag');
+      sw.style.transition='transform .15s';sw.style.transform='';
+      setTimeout(()=>{sw.style.transition=''},170);
+      items=[...listEl.children].map(x=>x._it).filter(Boolean);
+      save();
+      swiped=true;setTimeout(()=>{swiped=false},300);
+      return;
+    }
+    el.style.transition='transform .2s';el.style.transform='';
+    setTimeout(()=>{bg.style.background='';bg.textContent=''},200);
+    if(horiz){
+      swiped=true;setTimeout(()=>{swiped=false},300);
+      if(Math.abs(dx)>=80){dx<0?openEdit(it):askDelete(it)}
+    }
+  };
+  el.addEventListener('pointerup',end);
+  el.addEventListener('pointercancel',end);
+  el.addEventListener('click',e=>{if(swiped){e.stopPropagation();e.preventDefault()}},true);
+}
+
+/* تعديل */
+const cmodal=document.getElementById('cmodal'),cName=document.getElementById('cName');
+let renamingCat=null;
+function openCatEdit(c){renamingCat=c;cName.value=c;cmodal.hidden=false;fitModals();cName.focus()}
+function closeCat(){cmodal.hidden=true;renamingCat=null;fitModals()}
+document.getElementById('cSave').onclick=()=>{
+  const n=cName.value.trim().slice(0,30);
+  if(!n||!renamingCat)return;
+  if(n!==renamingCat){items.forEach(i=>{if(i.cat===renamingCat)i.cat=n});if(curCat===renamingCat)curCat=n;catOrder=[...new Set(catOrder.map(c=>c===renamingCat?n:c))];saveCatOrder();save()}
+  closeCat();render();
+};
+document.getElementById('cCancel').onclick=closeCat;
+cmodal.addEventListener('click',e=>{if(e.target===cmodal)closeCat()});
+cName.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('cSave').click()});
+let chipSwiped=false;
+function attachChipDrag(b,box){
+  let timer=null,active=false,drag=false,id=null,sx=0,sy=0,lastX=0,baseLeft=0,tx=0;
+  const place=()=>{const r=b.getBoundingClientRect();const nat=r.left-tx;tx=baseLeft+(lastX-sx)-nat;b.style.transform='translateX('+tx+'px)'};
+  const reorder=()=>{
+    for(let k=0;k<8;k++){
+      const r=b.getBoundingClientRect(),vc=r.left+r.width/2,nc=vc-tx;
+      const p=b.previousElementSibling,n=b.nextElementSibling;
+      let pc=null,nn=null;
+      if(p&&p._cat){const pr=p.getBoundingClientRect();pc=pr.left+pr.width/2}
+      if(n&&n._cat){const nr=n.getBoundingClientRect();nn=nr.left+nr.width/2}
+      if(pc!==null&&(vc-pc)*(pc>nc?1:-1)>=0)box.insertBefore(p,b.nextSibling);
+      else if(nn!==null&&(vc-nn)*(nn>nc?1:-1)>=0)box.insertBefore(n,b);
+      else break;
+      place();
+    }
+  };
+  b.addEventListener('contextmenu',e=>e.preventDefault());
+  b.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    sx=e.clientX;sy=e.clientY;active=true;drag=false;id=e.pointerId;
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      if(!active)return;
+      drag=true;dragActive=true;
+      try{b.setPointerCapture(id)}catch(_){}
+      baseLeft=b.getBoundingClientRect().left;lastX=sx;tx=0;
+      b.classList.add('drag');
+      if(navigator.vibrate)navigator.vibrate(15);
+    },380);
+  });
+  b.addEventListener('pointermove',e=>{
+    if(!active||e.pointerId!==id)return;
+    if(drag){
+      lastX=e.clientX;
+      const cr=box.getBoundingClientRect();
+      if(lastX<cr.left+40)box.scrollBy(-8,0);else if(lastX>cr.right-40)box.scrollBy(8,0);
+      place();reorder();return;
+    }
+    if(Math.abs(e.clientX-sx)>8||Math.abs(e.clientY-sy)>8){clearTimeout(timer);active=false}
+  });
+  const end=()=>{
+    clearTimeout(timer);
+    if(!active)return;
+    active=false;
+    if(drag){
+      drag=false;dragActive=false;
+      b.classList.remove('drag');b.style.transform='';
+      catOrder=[...box.children].map(x=>x._cat).filter(Boolean);
+      saveCatOrder();
+      chipSwiped=true;setTimeout(()=>{chipSwiped=false},300);
+    }
+  };
+  b.addEventListener('pointerup',end);
+  b.addEventListener('pointercancel',end);
+}
+let editing=null,adding=false;
+const modal=$('modal'),eName=$('eName'),eVal=$('eVal'),eKm=$('eKm');
+const eCat=$('eCat');
+function fillChips(){
+  const box=$('eCats');box.innerHTML='';
+  getCats().forEach(c=>{
+    const b=document.createElement('button');
+    b.className='chip'+(eCat.value.trim()===c?' on':'');
+    b.textContent=c;
+    b.onclick=()=>{eCat.value=eCat.value.trim()===c?'':c;fillChips()};
+    box.appendChild(b);
+  });
+}
+eCat.addEventListener('input',fillChips);
+const eConv=$('eConv');
+const AR=/[\u0600-\u06FF]/;
+function markAr(el){el.classList.toggle('hasar',AR.test(el.value))}
+function syncConv(){
+  markAr(eVal);
+  const k=valKind(eVal.value);
+  eConv.hidden=!k;
+  if(k){eConv.innerHTML=k==='coord'?ICO_PLUSBOX:ICO_TARGET;const t=k==='coord'?'تحويل إلى كود بلس':'تحويل إلى إحداثيات';eConv.title=t;eConv.setAttribute('aria-label',t)}
+}
+eVal.addEventListener('input',syncConv);
+eConv.addEventListener('mousedown',e=>e.preventDefault());
+eConv.onclick=async()=>{
+  const cur=eVal.value,k=valKind(cur);
+  if(k==='short'){
+    if(eConv.disabled)return;
+    eConv.disabled=true;eConv.style.opacity='.5';toast('جارٍ التحويل...');
+    let d=null;try{d=await coordsShort(toLatin(cur).trim())}catch(e){}
+    eConv.disabled=false;eConv.style.opacity='';
+    if(eVal.value!==cur)return;
+    if(!d){toast('تعذر التحويل، تحقق من الاتصال واسم المدينة');return}
+    eVal.value=fmtLL(d);syncConv();toast('تم التحويل إلى إحداثيات');return;
+  }
+  const nv=convertVal(cur);if(!nv)return;eVal.value=nv;syncConv();
+};
+function openAdd(v){
+  adding=true;editing={name:'',value:v};$('eTitle').textContent='إضافة موقع';
+  eName.value='';eVal.value=v;eKm.value='';eCat.value=curCat||'';fillChips();syncConv();modal.hidden=false;fitModals();eName.focus();
+}
+function openEdit(it){adding=false;$('eTitle').textContent='تعديل الموقع';editing=it;eName.value=it.name;eVal.value=it.value;eKm.value=it.km!=null?it.km:'';eCat.value=it.cat||'';fillChips();syncConv();modal.hidden=false;fitModals()}
+function closeEdit(){modal.hidden=true;editing=null;adding=false;fitModals()}
+$('eSave').onclick=()=>{
+  const n=eName.value.trim(),v=toLatin(eVal.value.trim());
+  if(!n||!v||!editing)return;
+  const oldV=editing.value,oldK=editing.km==null?null:editing.km;
+  editing.name=n;editing.value=v;
+  const k=parseKm(eKm.value);if(k!==null)editing.km=k;else delete editing.km;
+  const recalc=v!==oldV&&k===oldK;
+  const c=eCat.value.trim().slice(0,30);
+  if(c)editing.cat=c;else delete editing.cat;
+  const ed=editing;
+  if(adding){items.unshift(ed);$('q').value='';$('val').value='';markAr($('val'));save();closeEdit();render();if(ed.km==null)autoKm(ed);return}
+  save();closeEdit();render();if(recalc)autoKm(ed);
+};
+$('eCancel').onclick=closeEdit;
+modal.addEventListener('click',e=>{if(e.target===modal)closeEdit()});
+function fitModals(){
+  const v=window.visualViewport;
+  [modal,dmodal,imodal,amodal,cmodal,fmodal,curmodal,dsmodal].forEach(m=>{
+    const st=m.style;
+    if(m.hidden||!v){st.top=st.height=st.bottom=st.alignItems=st.paddingTop=st.paddingBottom='';m.firstElementChild.style.maxHeight=m.firstElementChild.style.overflow='';return}
+    st.top=v.offsetTop+'px';st.height=v.height+'px';st.bottom='auto';
+    const bx=m.firstElementChild,fits=bx.scrollHeight+34<=v.height;
+    if(fits){st.alignItems='';st.paddingTop=st.paddingBottom='';bx.style.maxHeight=bx.style.overflow=''}
+    else{st.alignItems='flex-start';st.paddingTop='15px';st.paddingBottom='0';bx.style.maxHeight='none';bx.style.overflow='visible'}
+  });
+}
+if(window.visualViewport){visualViewport.addEventListener('resize',fitModals);visualViewport.addEventListener('scroll',fitModals)}
+/* رسوم التوصيل */
+const FKEY=KEY+'-fare';
+const ICO_MONEY='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>';
+let fare={};
+try{fare=JSON.parse(localStorage.getItem(FKEY)||'{}')||{}}catch(e){fare={}}
+const fmtMoney=n=>String(Math.round(n*100)/100);
+const toMin=t=>{if(!t)return null;const [h,m]=t.split(':').map(Number);return isFinite(h)&&isFinite(m)?h*60+m:null};
+function isNight(){
+  const a=toMin(fare.ns),b=toMin(fare.ne);if(a===null||b===null||a===b)return false;
+  const d=new Date(),t=d.getHours()*60+d.getMinutes();
+  return a<b?(t>=a&&t<b):(t>=a||t<b);
+}
+function fareFor(km){
+  if(!(km>0))return null;
+  const n=isNight(),flag=n?fare.fn:fare.fd,rate=n?fare.rn:fare.rd;
+  const has=v=>typeof v==='number'&&isFinite(v);
+  if(!has(flag)&&!has(rate)&&!has(fare.ex)&&!has(fare.mn))return null;
+  const v=(has(flag)?flag:0)+km*(has(rate)?rate:0)+(has(fare.ex)?fare.ex:0);
+  return has(fare.mn)?Math.max(v,fare.mn):v;
+}
+const fmodal=$('fmodal'),fIds=['fFd','fFn','fRd','fRn','fEx','fMn','fNs','fNe'],fKeys=['fd','fn','rd','rn','ex','mn','ns','ne'];
+$('hFare').innerHTML='<svg '+IC+'><rect x="2" y="6" width="20" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg><span>توصيل</span>';
+$('hFare').onclick=()=>{
+  closeMenu();
+  fIds.forEach((id,i)=>{const v=fare[fKeys[i]];$(id).value=v==null?'':v});
+  syncTW();fmodal.hidden=false;fitModals();
+};
+function syncTW(){['fNs','fNe'].forEach(id=>$(id).parentNode.classList.toggle('empty',!$(id).value))}
+['fNs','fNe'].forEach(id=>{$(id).addEventListener('input',syncTW);$(id).addEventListener('change',syncTW)});
+/* المسافة من المنزل */
+const PCA='23456789CFGHJMPQRVWX';
+function pcDecode(c){
+  c=c.toUpperCase().replace('+','');
+  if(c.length<10||[...c].some(x=>PCA.indexOf(x)<0))return null;
+  const res=[20,1,.05,.0025,.000125];let lat=-90,lng=-180;
+  for(let i=0;i<5;i++){lat+=PCA.indexOf(c[2*i])*res[i];lng+=PCA.indexOf(c[2*i+1])*res[i]}
+  let la=res[4],lo=res[4];
+  for(let i=10;i<Math.min(c.length,15);i++){la/=5;lo/=4;const d=PCA.indexOf(c[i]);lat+=Math.floor(d/4)*la;lng+=(d%4)*lo}
+  return {lat:lat+la/2,lng:lng+lo/2};
+}
+function pcPrefix(lat,lng,n){
+  let la=Math.floor((Math.min(Math.max(lat,-90),89.999999)+90)*8000+1e-6),lo=Math.floor((((lng+180)%360+360)%360)*8000+1e-6);
+  const a=[],b=[];
+  for(let i=4;i>=0;i--){a[i]=la%20;la=Math.floor(la/20);b[i]=lo%20;lo=Math.floor(lo/20)}
+  let s='';for(let i=0;i<5;i++)s+=PCA[a[i]]+PCA[b[i]];
+  return s.slice(0,n);
+}
+function pcEncode(lat,lng){
+  lat=Math.min(Math.max(lat,-90),89.999999);
+  const p=pcPrefix(lat,lng,10);
+  const lf=Math.floor((lat+90)*40000+1e-6),gf=Math.floor((((lng+180)%360+360)%360)*32000+1e-6);
+  return p.slice(0,8)+'+'+p.slice(8)+PCA[(lf%5)*4+(gf%4)];
+}
+function pcRecover(c,ref){
+  c=c.toUpperCase();const pi=c.indexOf('+');
+  if(pi<2||pi>6||pi%2)return null;
+  const pad=8-pi,res=Math.pow(20,2-pad/2),half=res/2;
+  const d=pcDecode(pcPrefix(ref.lat,ref.lng,pad)+c);
+  if(!d)return null;
+  let lat=d.lat,lng=d.lng;
+  if(ref.lat+half<lat&&lat-res>=-90)lat-=res;else if(ref.lat-half>lat&&lat+res<=90)lat+=res;
+  if(ref.lng+half<lng)lng-=res;else if(ref.lng-half>lng)lng+=res;
+  return {lat,lng};
+}
+const GKEY=KEY+'-geo';
+let geo={};
+try{geo=JSON.parse(localStorage.getItem(GKEY)||'{}')||{}}catch(e){geo={}}
+async function geocode(q){
+  q=q.trim();const k=q.toLowerCase();
+  if(geo[k])return geo[k];
+  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),12000);
+  try{
+    const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=ar&q='+encodeURIComponent(q),{signal:ctl.signal});
+    const j=await r.json();
+    if(!j[0])return null;
+    const p={lat:+j[0].lat,lng:+j[0].lon};
+    geo[k]=p;try{localStorage.setItem(GKEY,JSON.stringify(geo))}catch(e){}
+    await new Promise(r=>setTimeout(r,1100));
+    return p;
+  }finally{clearTimeout(t)}
+}
+async function coordsShort(v){
+  const m=String(v).trim().match(/^([23456789CFGHJMPQRVWX]{2,6}\+[23456789CFGHJMPQRVWX]{2,7})\s+(.+)$/i);
+  if(!m)return null;
+  try{
+    const city=m[2].replace(/[\u064B-\u0652\u0670\u0640]/g,'').trim();
+    let ref=await geocode(city);
+    return ref?pcRecover(m[1],ref):null;
+  }catch(e){return null}
+}
+function coordsOf(v){
+  v=toLatin(v).trim();
+  let m=v.match(/^([23456789CFGHJMPQRVWX]{8})\+([23456789CFGHJMPQRVWX]{2,7})(?:\s|$)/i);
+  if(m)return pcDecode(m[1]+'+'+m[2]);
+  m=v.match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/);
+  if(m)return {lat:+m[1],lng:+m[2]};
+  let u=v;try{u=decodeURIComponent(v)}catch(e){}
+  m=u.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/)||u.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/)||u.match(/[?&](?:q|query|ll|destination)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+  return m?{lat:+m[1],lng:+m[2]}:null;
+}
+async function roadKm(a,b){
+  const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),12000);
+  try{
+    const r=await fetch('https://router.project-osrm.org/route/v1/driving/'+a.lng+','+a.lat+';'+b.lng+','+b.lat+'?overview=false',{signal:ctl.signal});
+    const j=await r.json();
+    if(!j.routes||!j.routes[0])throw 0;
+    return Math.round(j.routes[0].distance/100)/10;
+  }finally{clearTimeout(t)}
+}
+const isHome=it=>it.name.trim()==='المنزل';
+const homeItem=()=>items.find(isHome);
+async function homeCoords(){
+  const hi=homeItem();if(!hi)return null;
+  return coordsOf(hi.value)||await coordsShort(hi.value);
+}
+async function autoKm(it,quiet){
+  if(isHome(it))return false;
+  const h=await homeCoords();let d=coordsOf(it.value);
+  if(!h){if(!quiet)toast(homeItem()?'تعذر قراءة موقع «المنزل»، تأكد من رمزه':'أضف بطاقة باسم «المنزل» برمز موقع صحيح');return false}
+  if(!d)d=await coordsShort(it.value);
+  if(!d){if(!quiet)toast('تعذر قراءة رمز الموقع');return false}
+  try{it.km=await roadKm(h,d);save();render();return true}
+  catch(e){if(!quiet)toast('تعذر حساب المسافة');return false}
+}
+async function calcAll(onlyMissing){
+  const h=await homeCoords();
+  if(!h){toast(homeItem()?'تعذر قراءة موقع «المنزل»، تأكد من رمزه':'أضف بطاقة باسم «المنزل» برمز موقع صحيح');return}
+  const list=items.filter(it=>!isHome(it)&&(!onlyMissing||it.km==null));
+  if(!list.length){toast('لا توجد مواقع للحساب');return}
+  let ok=0;
+  for(let i=0;i<list.length;i++){
+    toast('جارٍ الحساب '+(i+1)+'/'+list.length);
+    if(await autoKm(list[i],true))ok++;
+    await new Promise(r=>setTimeout(r,250));
+  }
+  toast('تم حساب '+ok+' من '+list.length);
+}
+const dsmodal=$('dsmodal');
+$('hDist').innerHTML='<svg '+IC+'>'+ICO_RULER.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')+'</svg><span>مسافة</span>';
+$('hDist').onclick=()=>{closeMenu();dsmodal.hidden=false;fitModals()};
+function closeDs(){dsmodal.hidden=true;fitModals()}
+dsmodal.addEventListener('click',e=>{if(e.target===dsmodal)closeDs()});
+$('dsCalc').onclick=()=>{closeDs();calcAll(true)};
+$('dsAll').onclick=()=>{if(confirm('سيتم استبدال كل المسافات الحالية بمسافة الطريق من المنزل. متابعة؟')){closeDs();calcAll(false)}};
+const curmodal=$('curmodal'),curIn=$('curIn');
+function openCur(){curIn.value=fare.cur||'';curmodal.hidden=false;fitModals();curIn.focus()}
+function closeCur(){curmodal.hidden=true;fitModals()}
+$('curCancel').onclick=closeCur;
+curmodal.addEventListener('click',e=>{if(e.target===curmodal)closeCur()});
+curIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('curSave').click()}});
+$('curSave').onclick=()=>{
+  const v=curIn.value.trim();
+  if(v)fare.cur=v;else delete fare.cur;
+  try{localStorage.setItem(FKEY,JSON.stringify(fare))}catch(e){}
+  closeCur();render();
+};
+function closeFare(){fmodal.hidden=true;fitModals()}
+$('fCancel').onclick=closeFare;
+fmodal.addEventListener('click',e=>{if(e.target===fmodal)closeFare()});
+$('fSave').onclick=()=>{
+  const nf={};
+  for(let i=0;i<6;i++){
+    const raw=$(fIds[i]).value,v=parseKm(raw);
+    if(String(raw).trim()!==''&&v===null){toast('قيمة غير صحيحة');return}
+    if(v!==null)nf[fKeys[i]]=v;
+  }
+  const ns=$('fNs').value,ne=$('fNe').value;
+  if(!!ns!==!!ne){toast('حدد بداية ونهاية الفترة الليلية');return}
+  if(ns){nf.ns=ns;nf.ne=ne}
+  if(fare.cur)nf.cur=fare.cur;
+  fare=nf;
+  try{localStorage.setItem(FKEY,JSON.stringify(fare))}catch(e){}
+  closeFare();render();
+};
+let lastNight=isNight();
+setInterval(()=>{
+  const n=isNight();
+  if(n!==lastNight){lastNight=n;if(document.querySelectorAll('.modal:not([hidden])').length===0)render()}
+},30000);
+
+render();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
+</script>
+</body>
+</html>

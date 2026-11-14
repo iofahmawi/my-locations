@@ -1,0 +1,19 @@
+{
+  "name": "مواقعي",
+  "short_name": "مواقعي",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "background_color": "#f4f6f8",
+  "theme_color": "#f4f6f8",
+  "icons": [
+    {
+      "src": "icon-1440.png",
+      "sizes": "1440x1440",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
