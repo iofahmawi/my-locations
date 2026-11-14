@@ -97,7 +97,7 @@ button.add{font:inherit;font-weight:600;background:var(--accent);color:#fff;bord
 .sw{position:relative;border-radius:14px;overflow:hidden}
 .sw.pg{display:none}
 .pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:10.75px 0 0}
-body.paged .wrap{padding-bottom:8px}
+body.paged .wrap{padding-bottom:0}
 .pager[hidden]{display:none}
 .pager button{width:44px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer}
 .pager button:disabled{opacity:.35;cursor:default}
@@ -260,7 +260,14 @@ function syncLock(){
   const over=de.scrollHeight-de.clientHeight;
   if(!pager.hidden&&!openEl&&!listEl.querySelector('.sw.drag')&&over<=8)de.style.overflowY='hidden';
 }
-window.addEventListener('resize',syncLock);
+function placePager(){
+  if(pager.hidden)return;
+  pager.style.marginTop='10.75px';
+  const R=document.documentElement.clientHeight-(listEl.getBoundingClientRect().bottom+window.scrollY);
+  pager.style.marginTop=Math.max(10.75,(R-34)/2)+'px';
+}
+window.addEventListener('resize',()=>{placePager();syncLock()});
+window.addEventListener('load',()=>{placePager();syncLock()});
 function expandAll(){listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true;listEl.style.minHeight='';document.body.classList.remove('paged');syncLock()}
 
 function countWord(n){return n<=2?n+' موقع':n<=10?n+' مواقع':n+' موقعاً'}
@@ -442,6 +449,7 @@ function render(){
       listEl.style.minHeight=(ps*h+(ps-1)*gap)+'px';
     }
   }
+  placePager();
   syncLock();
 }
 $('pgPrev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
