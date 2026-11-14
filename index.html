@@ -96,9 +96,10 @@ button.add{font:inherit;font-weight:600;background:var(--accent);color:#fff;bord
 .sw{-webkit-touch-callout:none}
 .sw{position:relative;border-radius:14px;overflow:hidden}
 .sw.pg{display:none}
-.pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0 4px}
+.pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:8px 0 0}
+body.paged .wrap{padding-bottom:8px}
 .pager[hidden]{display:none}
-.pager button{width:44px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer}
+.pager button{width:44px;height:34px;padding:0;display:flex;align-items:center;justify-content:center;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer}
 .pager button:disabled{opacity:.35;cursor:default}
 .pager span{min-width:44px;text-align:center;color:var(--muted);font-size:14px}
 .sw .bg{position:absolute;inset:0;display:flex;align-items:center;padding:0 22px;color:#fff;font-weight:700}
@@ -254,7 +255,13 @@ const listEl=$('list'),pager=$('pager');
 const isPWA=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
 const pageSize=()=>isPWA()?8:7;
 let page=0,pgKey='';
-function expandAll(){listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true}
+function syncLock(){
+  const de=document.documentElement;de.style.overflowY='';
+  const over=de.scrollHeight-de.clientHeight;
+  if(!pager.hidden&&!openEl&&!listEl.querySelector('.sw.drag')&&over<=8)de.style.overflowY='hidden';
+}
+window.addEventListener('resize',syncLock);
+function expandAll(){listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true;document.body.classList.remove('paged');syncLock()}
 
 function countWord(n){return n<=2?n+' موقع':n<=10?n+' مواقع':n+' موقعاً'}
 const parseKm=v=>{v=toLatin(v).trim().replace(',','.');if(v==='')return null;const x=Number(v);return isFinite(x)&&x>=0?x:null};
@@ -296,7 +303,7 @@ const ICO_SWAP='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stro
 const ICO_MAP='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
 
 let openEl=null;
-function closeOpts(){if(openEl){openEl.classList.remove('open');openEl=null}}
+function closeOpts(){if(openEl){openEl.classList.remove('open');openEl=null}syncLock()}
 const CRE=/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/,PRE=/^[23456789CFGHJMPQRVWX]{8}\+[23456789CFGHJMPQRVWX]{2,7}(?:\s|$)/i;
 const fmtLL=d=>d.lat.toFixed(6)+', '+d.lng.toFixed(6);
 /* نوع القيمة: إحداثيات أو كود بلس كامل، ثم التحويل بينهما */
@@ -385,7 +392,7 @@ document.addEventListener('click',e=>{
 });
 function render(){
   closeMenu();openEl=null;
-  listEl.innerHTML='';pager.hidden=true;
+  listEl.innerHTML='';pager.hidden=true;document.body.classList.remove('paged');
   renderCats();
   const nq=norm($('q').value);
   let view=items.filter(it=>(!curCat||it.cat===curCat)&&(!nq||norm(it.name).includes(nq)));
@@ -419,13 +426,14 @@ function render(){
       opts.append(g);
     }
     el.append(info,opts);
-    el.addEventListener('click',e=>{if(e.target.closest('.opts'))return;const was=el.classList.contains('open');closeOpts();if(!was){el.classList.add('open');openEl=el}});sw.append(bg,el);listEl.appendChild(sw);
+    el.addEventListener('click',e=>{if(e.target.closest('.opts'))return;const was=el.classList.contains('open');closeOpts();if(!was){el.classList.add('open');openEl=el}syncLock()});sw.append(bg,el);listEl.appendChild(sw);
     attachSwipe(el,bg,it);
   });
-  pager.hidden=pages<=1;
+  pager.hidden=pages<=1;document.body.classList.toggle('paged',pages>1);
   $('pgLbl').textContent=(page+1)+' / '+pages;
   $('pgPrev').disabled=page<=0;
   $('pgNext').disabled=page>=pages-1;
+  syncLock();
 }
 $('pgPrev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
 $('pgNext').onclick=()=>{page++;render();window.scrollTo(0,0)};
