@@ -95,6 +95,12 @@ button.add{font:inherit;font-weight:600;background:var(--accent);color:#fff;bord
 .sw.drag{z-index:5;box-shadow:0 10px 26px rgba(0,0,0,.28);transition:none}
 .sw{-webkit-touch-callout:none}
 .sw{position:relative;border-radius:14px;overflow:hidden}
+.sw.pg{display:none}
+.pager{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0 4px}
+.pager[hidden]{display:none}
+.pager button{width:44px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;color:var(--text);background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer}
+.pager button:disabled{opacity:.35;cursor:default}
+.pager span{min-width:44px;text-align:center;color:var(--muted);font-size:14px}
 .sw .bg{position:absolute;inset:0;display:flex;align-items:center;padding:0 22px;color:#fff;font-weight:700}
 .sw .item{position:relative;touch-action:pan-y;-webkit-user-select:none;user-select:none}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
@@ -140,6 +146,7 @@ button.cancel{font:inherit;font-weight:600;height:46px;color:var(--text);backgro
   </div>
   <div id="cats" hidden></div>
   <div class="list" id="list"></div>
+  <div class="pager" id="pager" hidden><button id="pgPrev" type="button" aria-label="السابق"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button><span id="pgLbl" dir="ltr"></span><button id="pgNext" type="button" aria-label="التالي"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button></div>
 </div>
 
 <div class="modal" id="modal" hidden>
@@ -243,7 +250,11 @@ const toLatin=s=>String(s).replace(/[\u0660-\u0669]/g,c=>c.charCodeAt(0)-0x660).
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(items))}catch(e){}};
 if(Array.isArray(items)){let ch=false;items.forEach(it=>{if(it&&typeof it.value==='string'){const n=toLatin(it.value);if(n!==it.value){it.value=n;ch=true}}});if(ch)save()}
 const $=id=>document.getElementById(id);
-const listEl=$('list');
+const listEl=$('list'),pager=$('pager');
+const isPWA=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+const pageSize=()=>isPWA()?8:7;
+let page=0,pgKey='';
+function expandAll(){listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true}
 
 function countWord(n){return n<=2?n+' موقع':n<=10?n+' مواقع':n+' موقعاً'}
 const parseKm=v=>{v=toLatin(v).trim().replace(',','.');if(v==='')return null;const x=Number(v);return isFinite(x)&&x>=0?x:null};
@@ -368,13 +379,13 @@ $('searchBtn').onclick=()=>{
 document.addEventListener('click',e=>{
   const top=document.querySelector('.top');
   if(!top.classList.contains('s'))return;
-  if(e.target.closest('.sbox,#moreBtn,#hmenu,.sw,.modal,#cats'))return;
+  if(e.target.closest('.sbox,#moreBtn,#hmenu,.sw,.modal,#cats,.pager'))return;
   top.classList.remove('s');
   $('q').tabIndex=-1;$('q').value='';$('q').blur();render();
 });
 function render(){
   closeMenu();openEl=null;
-  listEl.innerHTML='';
+  listEl.innerHTML='';pager.hidden=true;
   renderCats();
   const nq=norm($('q').value);
   let view=items.filter(it=>(!curCat||it.cat===curCat)&&(!nq||norm(it.name).includes(nq)));
@@ -382,10 +393,14 @@ function render(){
     const dk=it=>isHome(it)?-1:(it.km!=null?it.km:Infinity);
     view=view.map((it,i)=>[it,i]).sort((a,b)=>{const x=dk(a[0]),y=dk(b[0]);return x===y?a[1]-b[1]:x<y?-1:1}).map(p=>p[0]);
   }
+  const pgk=nq+'|'+curCat+'|'+(sortNear?1:0);
+  if(pgk!==pgKey){pgKey=pgk;page=0}
+  const ps=pageSize(),pages=Math.max(1,Math.ceil(view.length/ps));
+  if(page>pages-1)page=pages-1;
   if(!items.length){listEl.innerHTML='<div class="empty">لا توجد مواقع محفوظة بعد</div>';return}
   if(!view.length){listEl.innerHTML='<div class="empty">لا توجد نتائج</div>';return}
-  view.forEach(it=>{
-    const sw=document.createElement('div');sw.className='sw';sw._it=it;
+  view.forEach((it,vi)=>{
+    const sw=document.createElement('div');sw.className='sw'+(Math.floor(vi/ps)!==page?' pg':'');sw._it=it;
     const bg=document.createElement('div');bg.className='bg';
     const el=document.createElement('div');el.className='item';
     const info=document.createElement('div');info.className='info';
@@ -407,7 +422,13 @@ function render(){
     el.addEventListener('click',e=>{if(e.target.closest('.opts'))return;const was=el.classList.contains('open');closeOpts();if(!was){el.classList.add('open');openEl=el}});sw.append(bg,el);listEl.appendChild(sw);
     attachSwipe(el,bg,it);
   });
+  pager.hidden=pages<=1;
+  $('pgLbl').textContent=(page+1)+' / '+pages;
+  $('pgPrev').disabled=page<=0;
+  $('pgNext').disabled=page>=pages-1;
 }
+$('pgPrev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
+$('pgNext').onclick=()=>{page++;render();window.scrollTo(0,0)};
 
 $('val').addEventListener('input',()=>markAr($('val')));
 $('addBtn').onclick=()=>{
@@ -510,6 +531,8 @@ function attachSwipe(el,bg,it){
       if(!active||horiz!==null||$('q').value.trim()||curCat||sortNear)return;
       closeMenu();closeOpts();drag=true;dragActive=true;
       try{el.setPointerCapture(id)}catch(_){}
+      const r0=sw.getBoundingClientRect().top;expandAll();
+      const r1=sw.getBoundingClientRect().top;if(r1!==r0)window.scrollBy(0,r1-r0);
       baseTop=sw.offsetTop;baseScroll=window.scrollY;lastY=sy;
       sw.classList.add('drag');
       if(navigator.vibrate)navigator.vibrate(15);
@@ -550,6 +573,7 @@ function attachSwipe(el,bg,it){
       items=[...listEl.children].map(x=>x._it).filter(Boolean);
       save();
       swiped=true;setTimeout(()=>{swiped=false},300);
+      setTimeout(()=>{page=Math.floor(Math.max(0,items.indexOf(it))/pageSize());render();window.scrollTo(0,0)},180);
       return;
     }
     el.style.transition='transform .2s';el.style.transform='';
@@ -688,7 +712,7 @@ $('eSave').onclick=()=>{
   const c=eCat.value.trim().slice(0,30);
   if(c)editing.cat=c;else delete editing.cat;
   const ed=editing;
-  if(adding){items.unshift(ed);$('q').value='';$('val').value='';markAr($('val'));save();closeEdit();render();if(ed.km==null)autoKm(ed);return}
+  if(adding){items.unshift(ed);page=0;$('q').value='';$('val').value='';markAr($('val'));save();closeEdit();render();if(ed.km==null)autoKm(ed);return}
   save();closeEdit();render();if(recalc)autoKm(ed);
 };
 $('eCancel').onclick=closeEdit;
