@@ -261,7 +261,7 @@ function syncLock(){
   if(!pager.hidden&&!openEl&&!listEl.querySelector('.sw.drag')&&over<=8)de.style.overflowY='hidden';
 }
 window.addEventListener('resize',syncLock);
-function expandAll(){listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true;document.body.classList.remove('paged');syncLock()}
+function expandAll(){listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true;listEl.style.minHeight='';document.body.classList.remove('paged');syncLock()}
 
 function countWord(n){return n<=2?n+' موقع':n<=10?n+' مواقع':n+' موقعاً'}
 const parseKm=v=>{v=toLatin(v).trim().replace(',','.');if(v==='')return null;const x=Number(v);return isFinite(x)&&x>=0?x:null};
@@ -433,6 +433,15 @@ function render(){
   $('pgLbl').textContent=(page+1)+' / '+pages;
   $('pgPrev').disabled=page<=0;
   $('pgNext').disabled=page>=pages-1;
+  listEl.style.minHeight='';
+  if(pages>1){
+    const vis=[...listEl.children].filter(x=>x._it&&!x.classList.contains('pg'));
+    if(vis.length){
+      const h=Math.max(...vis.map(x=>x.getBoundingClientRect().height));
+      const gap=parseFloat(getComputedStyle(listEl).rowGap)||0;
+      listEl.style.minHeight=(ps*h+(ps-1)*gap)+'px';
+    }
+  }
   syncLock();
 }
 $('pgPrev').onclick=()=>{if(page>0){page--;render();window.scrollTo(0,0)}};
