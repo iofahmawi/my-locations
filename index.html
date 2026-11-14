@@ -257,7 +257,7 @@ const pageSize=()=>isPWA()?8:7;
 let page=0,pgKey='',pageCount=1,allShown=false;
 function syncPager(){
   const show=pageCount>1&&!openEl&&!allShown;
-  pager.hidden=!show;document.body.classList.toggle('paged',show);
+  pager.hidden=!show;document.body.classList.toggle('paged',pageCount>1&&!allShown);
   if(show)placePager();
 }
 function syncLock(){
