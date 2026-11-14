@@ -254,8 +254,14 @@ const $=id=>document.getElementById(id);
 const listEl=$('list'),pager=$('pager');
 const isPWA=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
 const pageSize=()=>isPWA()?8:7;
-let page=0,pgKey='',pageCount=1;
+let page=0,pgKey='',pageCount=1,allShown=false;
+function syncPager(){
+  const show=pageCount>1&&!openEl&&!allShown;
+  pager.hidden=!show;document.body.classList.toggle('paged',show);
+  if(show)placePager();
+}
 function syncLock(){
+  syncPager();
   const de=document.documentElement;de.style.overflowY='';
   const over=de.scrollHeight-de.clientHeight;
   if(!pager.hidden&&!openEl&&!listEl.querySelector('.sw.drag')&&over<=8)de.style.overflowY='hidden';
@@ -268,7 +274,7 @@ function placePager(){
 }
 window.addEventListener('resize',()=>{placePager();syncLock()});
 window.addEventListener('load',()=>{placePager();syncLock()});
-function expandAll(){listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true;listEl.style.minHeight='';document.body.classList.remove('paged');syncLock()}
+function expandAll(){allShown=true;listEl.querySelectorAll('.sw.pg').forEach(x=>x.classList.remove('pg'));pager.hidden=true;listEl.style.minHeight='';document.body.classList.remove('paged');syncLock()}
 
 function countWord(n){return n<=2?n+' موقع':n<=10?n+' مواقع':n+' موقعاً'}
 const parseKm=v=>{v=toLatin(v).trim().replace(',','.');if(v==='')return null;const x=Number(v);return isFinite(x)&&x>=0?x:null};
@@ -399,7 +405,7 @@ document.addEventListener('click',e=>{
 });
 function render(){
   closeMenu();openEl=null;
-  listEl.innerHTML='';pager.hidden=true;document.body.classList.remove('paged');
+  listEl.innerHTML='';allShown=false;pager.hidden=true;document.body.classList.remove('paged');
   renderCats();
   const nq=norm($('q').value);
   let view=items.filter(it=>(!curCat||it.cat===curCat)&&(!nq||norm(it.name).includes(nq)));
